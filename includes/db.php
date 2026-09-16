@@ -1,10 +1,10 @@
 <?php
 date_default_timezone_set('Africa/Kampala');
 
-$host = 'localhost';
-$dbname = 'kokcs_oqs';
-$username = 'root';
-$password = ''; // Default XAMPP/WAMP password
+$host = getenv('DB_HOST') ?: 'localhost';
+$dbname = getenv('DB_NAME') ?: 'kokcs_oqs';
+$username = getenv('DB_USER') ?: 'root';
+$password = getenv('DB_PASS') ?: '';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
