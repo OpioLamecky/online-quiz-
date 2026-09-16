@@ -1,3 +1,6 @@
+-- Supabase / PostgreSQL schema for KoKCS Online Assessment Portal
+-- Compatible with the current PHP app structure and role-based logic.
+
 BEGIN;
 
 DROP TABLE IF EXISTS attempt_answers CASCADE;
@@ -107,23 +110,29 @@ CREATE TABLE attempt_answers (
         ON DELETE CASCADE
 );
 
+-- Seed demo users
+-- Admin password: admin@kok
+-- Hash generated with bcrypt for password_hash verification in the PHP app.
 INSERT INTO users (name, email, password_hash, role, class_level, subject) VALUES
 ('Admin User', 'admin@kokcs.edu.ug', '$2y$10$Uc/lmwsDf.g.tJBjTd3G1OqkgXYcxmeI1hexnWWEHn11/Do8vZSRK', 'admin', NULL, NULL),
 ('Supervisor User', 'supervisor@kokcs.edu.ug', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'supervisor', NULL, 'Science'),
 ('Teacher User', 'teacher@kokcs.edu.ug', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'teacher', NULL, 'Mathematics'),
 ('Student User', 'student@kokcs.edu.ug', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'student', 'S4', NULL);
 
+-- Seed sample questions
 INSERT INTO questions (teacher_id, subject, topic, difficulty, question_text, type, options_json, correct_answer, explanation)
 VALUES
 (3, 'Mathematics', 'Algebra', 'easy', 'What is 2 + 2?', 'multiple_choice', '["1", "2", "3", "4"]', '4', 'Basic addition.'),
 (3, 'Mathematics', 'Geometry', 'medium', 'A triangle has 4 sides.', 'true_false', NULL, 'False', 'A triangle always has 3 sides.'),
 (3, 'Mathematics', 'Calculus', 'hard', 'What is the derivative of x^2?', 'short_answer', NULL, '2x', 'Power rule of differentiation.');
 
+-- Seed sample quizzes
 INSERT INTO quizzes (teacher_id, title, subject, class_level, duration_minutes, start_time, end_time, status, randomize, max_attempts)
 VALUES
 (3, 'Math Midterm Exam', 'Mathematics', 'S4', 60, NOW() - INTERVAL '1 day', NOW() + INTERVAL '1 day', 'live', TRUE, 1),
 (3, 'Math Quiz 1', 'Mathematics', 'S4', 30, NOW() - INTERVAL '7 day', NOW() - INTERVAL '6 day', 'closed', FALSE, 1);
 
+-- Link questions to quizzes
 INSERT INTO quiz_questions (quiz_id, question_id, order_index, marks)
 VALUES
 (1, 1, 1, 5),

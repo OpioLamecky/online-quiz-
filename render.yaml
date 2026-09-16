@@ -11,8 +11,8 @@ services:
       - key: DB_HOST
         sync: false
       - key: DB_NAME
-        value: kokcs_oqs
+        value: postgres
       - key: DB_USER
-        sync: false
+        value: postgres
       - key: DB_PASS
         sync: false

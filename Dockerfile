@@ -4,7 +4,8 @@ WORKDIR /var/www/html
 
 COPY . /var/www/html/
 
-RUN docker-php-ext-install pdo pdo_mysql
+RUN apt-get update && apt-get install -y libpq-dev && \
+    docker-php-ext-install pdo pdo_pgsql
 
 EXPOSE 80
 
