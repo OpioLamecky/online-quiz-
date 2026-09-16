@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: kokcs-online-assessment
+    env: docker
+    plan: free
+    region: oregon
+    docker:
+      dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DB_HOST
+        sync: false
+      - key: DB_NAME
+        value: kokcs_oqs
+      - key: DB_USER
+        sync: false
+      - key: DB_PASS
+        sync: false
