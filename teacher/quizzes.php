@@ -10,8 +10,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $class_level = $_POST['class_level'];
     $duration = $_POST['duration'];
     $passmark = $_POST['passmark'] ?? 50;
-    $start_time = $_POST['start_time'];
-    $end_time = $_POST['end_time'];
+    $timezone = new DateTimeZone('Africa/Kampala');
+    $startDate = DateTime::createFromFormat('Y-m-d\\TH:i', $_POST['start_time'], $timezone);
+    $endDate = DateTime::createFromFormat('Y-m-d\\TH:i', $_POST['end_time'], $timezone);
+
+    if (!$startDate || !$endDate || $endDate <= $startDate) {
+        die('Please provide a valid quiz schedule with an end time after the start time.');
+    }
+
+    $start_time = $startDate->format('Y-m-d H:i:sP');
+    $end_time = $endDate->format('Y-m-d H:i:sP');
     
     // Auto-migrate DB
     try {

@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $orderStmt->execute([$quizId]);
     $nextOrder = $orderStmt->fetchColumn();
     
-    $insertStmt = $pdo->prepare("INSERT IGNORE INTO quiz_questions (quiz_id, question_id, order_index, marks) VALUES (?, ?, ?, ?)");
+    $insertStmt = $pdo->prepare("INSERT INTO quiz_questions (quiz_id, question_id, order_index, marks) VALUES (?, ?, ?, ?) ON CONFLICT (quiz_id, question_id) DO NOTHING");
     $insertStmt->execute([$quizId, $question_id, $nextOrder, $marks]);
     
     header("Location: manage_quiz.php?id=$quizId&success=added");
