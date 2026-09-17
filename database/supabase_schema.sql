@@ -114,10 +114,10 @@ CREATE TABLE attempt_answers (
 -- Admin password: admin@kok
 -- Hash generated with bcrypt for password_hash verification in the PHP app.
 INSERT INTO users (name, email, password_hash, role, class_level, subject) VALUES
-('Admin User', 'admin@kokcs.edu.ug', '$2y$10$Uc/lmwsDf.g.tJBjTd3G1OqkgXYcxmeI1hexnWWEHn11/Do8vZSRK', 'admin', NULL, NULL),
-('Supervisor User', 'supervisor@kokcs.edu.ug', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'supervisor', NULL, 'Science'),
-('Teacher User', 'teacher@kokcs.edu.ug', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'teacher', NULL, 'Mathematics'),
-('Student User', 'student@kokcs.edu.ug', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'student', 'S4', NULL);
+('Admin User', 'admin@kokcs.edu.ug', '$2y$10$oCrM.CMFArVx2KfoFUXv1Om7hKah8QbYA4JKnOv4sJBoeDc.BXaiO', 'admin', NULL, NULL),
+('Pretty Supervisor', 'pretty@kokcs.edu.ug', '$2y$10$txIFfHo3cMduy/3i2Ikbie291kvCRQ/Pfsk4DpisVbZp08hsRV.CK', 'supervisor', 'S4', 'Mathematics'),
+('Lameck Teacher', 'lameck@kokcs.edu.ug', '$2y$10$RKD8fJSmeoajpiBwH/oy9.jXs6wbr9rdXTyBEpYXkR/BD2nt.8joO', 'teacher', NULL, 'Mathematics'),
+('Eriya Student', 'eriya@kokcs.edu.ug', '$2y$10$Vl.jtwN3xXm/uverjoYyw.eIc/pxT6g/0Za.KpX2hHTkeORcJQxk6', 'student', 'S4', 'Mathematics');
 
 -- Seed sample questions
 INSERT INTO questions (teacher_id, subject, topic, difficulty, question_text, type, options_json, correct_answer, explanation)

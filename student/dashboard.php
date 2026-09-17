@@ -22,9 +22,12 @@ if (!empty($studentSubjectsStr)) {
 // Auto-submit any expired in_progress attempts for this student
 $autoSubmitStmt = $pdo->prepare("
     UPDATE quiz_attempts qa
-    JOIN quizzes q ON qa.quiz_id = q.id
-    SET qa.status = 'graded', qa.submitted_at = q.end_time
-    WHERE qa.student_id = ? AND qa.status = 'in_progress' AND q.end_time <= NOW()
+    SET status = 'graded', submitted_at = q.end_time
+    FROM quizzes q
+    WHERE qa.quiz_id = q.id
+      AND qa.student_id = ?
+      AND qa.status = 'in_progress'
+      AND q.end_time <= NOW()
 ");
 $autoSubmitStmt->execute([$studentId]);
 
@@ -41,9 +44,6 @@ if (!empty($studentSubjects)) {
 }
 
 // Get available quizzes for this student's class and subjects
-// Parameter order: [studentId, classLevel, ...subjectParams]
-$params = array_merge([$studentId, $classLevel], $subjectParams);
-
 $availableStmt = $pdo->prepare("
     SELECT q.*, 
     (SELECT COUNT(*) FROM quiz_attempts qa WHERE qa.quiz_id = q.id AND qa.student_id = ?) as attempt_count
@@ -52,10 +52,14 @@ $availableStmt = $pdo->prepare("
     AND q.class_level = ?
     $subjectWhereClause
     AND q.end_time >= NOW()
-    HAVING attempt_count < q.max_attempts
+    AND (
+        SELECT COUNT(*)
+        FROM quiz_attempts qa
+        WHERE qa.quiz_id = q.id AND qa.student_id = ?
+    ) < q.max_attempts
     ORDER BY q.start_time ASC
 ");
-$availableStmt->execute($params);
+$availableStmt->execute(array_merge([$studentId, $classLevel], $subjectParams, [$studentId]));
 $availableQuizzes = $availableStmt->fetchAll();
 
 // Get recent attempts
