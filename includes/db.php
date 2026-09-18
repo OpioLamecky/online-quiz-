@@ -25,13 +25,12 @@ try {
          ON CONFLICT (migration_name) DO NOTHING
          RETURNING migration_name"
     );
-    $migrationStmt->execute(['20260917_fix_legacy_quiz_times']);
+    $migrationStmt->execute(['20260918_remove_seed_quizzes']);
 
     if ($migrationStmt->fetchColumn()) {
-        $pdo->exec("UPDATE quizzes
-                    SET start_time = start_time - INTERVAL '3 hours',
-                        end_time = end_time - INTERVAL '3 hours'");
+                $pdo->exec("DELETE FROM quizzes");
     }
+
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
 }

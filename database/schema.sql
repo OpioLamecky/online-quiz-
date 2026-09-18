@@ -119,16 +119,4 @@ VALUES
 (3, 'Mathematics', 'Geometry', 'medium', 'A triangle has 4 sides.', 'true_false', NULL, 'False', 'A triangle always has 3 sides.'),
 (3, 'Mathematics', 'Calculus', 'hard', 'What is the derivative of x^2?', 'short_answer', NULL, '2x', 'Power rule of differentiation.');
 
-INSERT INTO quizzes (teacher_id, title, subject, class_level, duration_minutes, start_time, end_time, status, randomize, max_attempts)
-VALUES
-(3, 'Math Midterm Exam', 'Mathematics', 'S4', 60, NOW() - INTERVAL '1 day', NOW() + INTERVAL '1 day', 'live', TRUE, 1),
-(3, 'Math Quiz 1', 'Mathematics', 'S4', 30, NOW() - INTERVAL '7 day', NOW() - INTERVAL '6 day', 'closed', FALSE, 1);
-
-INSERT INTO quiz_questions (quiz_id, question_id, order_index, marks)
-VALUES
-(1, 1, 1, 5),
-(1, 2, 2, 5),
-(1, 3, 3, 10),
-(2, 1, 1, 5);
-
 COMMIT;

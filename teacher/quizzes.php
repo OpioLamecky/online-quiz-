@@ -18,8 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         die('Please provide a valid quiz schedule with an end time after the start time.');
     }
 
-    $start_time = $startDate->format('Y-m-d H:i:sP');
-    $end_time = $endDate->format('Y-m-d H:i:sP');
+    // Store scheduled instants explicitly in UTC; teachers enter Kampala local time.
+    $utc = new DateTimeZone('UTC');
+    $start_time = $startDate->setTimezone($utc)->format('Y-m-d H:i:sP');
+    $end_time = $endDate->setTimezone($utc)->format('Y-m-d H:i:sP');
     
     // Auto-migrate DB
     try {
