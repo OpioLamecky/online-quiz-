@@ -55,7 +55,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $explanation = $_POST['explanation'] ?? '';
     $marks = $_POST['marks'];
     
-    $options_json = ($type === 'multiple_choice') ? json_encode([$_POST['opt1'], $_POST['opt2'], $_POST['opt3'], $_POST['opt4']]) : NULL;
+    $options_json = null;
+    if ($type === 'multiple_choice') {
+        $options = array_map(
+            static fn($option) => trim((string) $option),
+            [$_POST['opt1'] ?? '', $_POST['opt2'] ?? '', $_POST['opt3'] ?? '', $_POST['opt4'] ?? '']
+        );
+        $options_json = json_encode($options, JSON_THROW_ON_ERROR);
+    }
     
     $insertQ = $pdo->prepare("INSERT INTO questions (teacher_id, subject, topic, difficulty, question_text, type, options_json, correct_answer, explanation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $insertQ->execute([$_SESSION['user_id'], $subject, $topic, $difficulty, $question_text, $type, $options_json, $correct_answer, $explanation]);
@@ -214,6 +221,16 @@ require_once '../includes/header.php';
                         <label class="small">Correct Answer</label>
                         <input type="text" name="correct_answer" class="form-control form-control-sm" placeholder="e.g. True, False, Option 1" required>
                     </div>
+                    <div id="multipleChoiceOptions" class="mb-2">
+                        <label class="small">Answer Options</label>
+                        <div class="row g-1">
+                            <?php for ($optionNumber = 1; $optionNumber <= 4; $optionNumber++): ?>
+                                <div class="col-6">
+                                    <input type="text" name="opt<?= $optionNumber ?>" class="form-control form-control-sm" placeholder="Option <?= $optionNumber ?>">
+                                </div>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-success btn-sm w-100">Create & Add to Quiz</button>
                 </form>
             </div>
@@ -226,3 +243,22 @@ require_once '../includes/header.php';
 </div>
 
 <?php require_once '../includes/footer.php'; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const typeInput = document.querySelector('select[name="type"]');
+    const optionsContainer = document.getElementById('multipleChoiceOptions');
+    const optionInputs = optionsContainer.querySelectorAll('input');
+
+    function updateOptionsVisibility() {
+        const isMultipleChoice = typeInput.value === 'multiple_choice';
+        optionsContainer.hidden = !isMultipleChoice;
+        optionInputs.forEach((input) => {
+            input.required = isMultipleChoice;
+        });
+    }
+
+    typeInput.addEventListener('change', updateOptionsVisibility);
+    updateOptionsVisibility();
+});
+</script>
